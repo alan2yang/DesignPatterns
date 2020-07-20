@@ -1,75 +1,114 @@
 from abc import ABCMeta, abstractmethod
 
 
-class AbstractProductA(object):
+class User:
     """
-    抽象产品, 可能拥有多种实现
-    """
-
-    def __init__(self, name):
-        self.name = name
-
-    def __str__(self):
-        return "ProductA: %s" % self.name
-
-
-class ConcreteProductA1(AbstractProductA):
-    pass
-
-
-class ConcreteProductA2(AbstractProductA):
-    pass
-
-
-class AbstractProductB(object):
-    """
-    抽象产品, 可能拥有多种实现
+    User Model
     """
 
-    def __init__(self, name):
-        self.name = name
 
-    def __str__(self):
-        return "ProductB: %s" % self.name
+class IUser(metaclass=ABCMeta):
 
-
-class ConcreteProductB1(AbstractProductB):
-    pass
-
-
-class ConcreteProductB2(AbstractProductB):
-    pass
-
-
-class AbstractFactory(metaclass=ABCMeta):
     @abstractmethod
-    def create_productA(self):
+    def insert_user(self, user):
+        """
+        insert user
+        """
         pass
 
     @abstractmethod
-    def create_productB(self):
+    def get_user(self):
+        """
+        get user
+        """
         pass
 
 
-class ConcreteFactory1(AbstractFactory):
-    def create_productA(self):
-        return ConcreteProductA1("PA1")
+class SqlserverUser(IUser):
+    def insert_user(self, user):
+        print("insert user into sqlserver")
 
-    def create_productB(self):
-        return ConcreteProductB1("PB1")
+    def get_user(self):
+        print("get user from sqlserver")
 
 
-class ConcreteFactory2(AbstractFactory):
-    def create_productA(self):
-        return ConcreteProductA2("PA2")
+class MysqlUser(IUser):
+    def insert_user(self, user):
+        print("insert user into mysql")
 
-    def create_productB(self):
-        return ConcreteProductB2("PB2")
+    def get_user(self):
+        print("get user from mysql")
+
+
+class Department:
+    """
+    Department Model
+    """
+
+
+class IDepartment(metaclass=ABCMeta):
+
+    @abstractmethod
+    def insert_department(self, department):
+        """
+        insert department
+        """
+
+    @abstractmethod
+    def get_department(self):
+        """
+        get department
+        """
+
+
+class SqlserverDepartment(IDepartment):
+    def insert_department(self, department):
+        print("Insert department into Sqlserver")
+
+    def get_department(self):
+        print("Get department from Sqlserver")
+
+
+class MysqlDepartment(IDepartment):
+    def insert_department(self, department):
+        print("Insert department into Mysql")
+
+    def get_department(self):
+        print("Get department from Mysql")
+
+
+class IFactory(metaclass=ABCMeta):
+    @abstractmethod
+    def create_user(self):
+        """
+        create user
+        """
+
+    @abstractmethod
+    def create_department(self):
+        """
+        create department
+        """
+
+
+class SqlserverFactory(IFactory):
+    def create_user(self):
+        return SqlserverUser()
+
+    def create_department(self):
+        return SqlserverDepartment()
+
+
+class MysqlFactory(IFactory):
+    def create_user(self):
+        return MysqlUser()
+
+    def create_department(self):
+        return MysqlDepartment()
 
 
 if __name__ == '__main__':
-    factory = ConcreteFactory1()
-    productA = factory.create_productA()
-    print(productA)
-    productB = factory.create_productB()
-    print(productB)
+    ifactory = SqlserverFactory()
+    iuser = ifactory.create_user()
+    iuser.insert_user(User())
+    iuser.get_user()
